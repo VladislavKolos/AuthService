@@ -1,4 +1,4 @@
-package com.example.emobile.authservice;
+package com.example.emobile;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
