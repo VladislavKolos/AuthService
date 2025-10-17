@@ -23,7 +23,14 @@ public class SecurityConfig {
             return http
                     .csrf(AbstractHttpConfigurer::disable)
                     .authorizeHttpRequests(auth -> auth
-                            .requestMatchers("/api/auth/signup", "/api/auth/verify").permitAll()
+                            .requestMatchers(
+                                    "/api/auth/signup",
+                                    "/api/auth/verify",
+                                    "/actuator/prometheus",
+                                    "/actuator/health",
+                                    "/actuator/info",
+                                    "/actuator/metrics"
+                            ).permitAll()
                             .anyRequest().authenticated())
                     .sessionManagement(session ->
                             session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

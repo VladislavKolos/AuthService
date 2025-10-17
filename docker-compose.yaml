@@ -1,7 +1,7 @@
 services:
-  postgres:
+  auth-postgres:
     image: postgres:16
-    container_name: postgres
+    container_name: auth-postgres
     ports:
       - "5432:5432"
     environment:
@@ -76,11 +76,42 @@ services:
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    restart: always
+    networks:
+      - kafka-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    restart: always
+    networks:
+      - kafka-network
+
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    environment:
+      - STORAGE_TYPE=mem
+    restart: always
+
 volumes:
   postgres_data:
   postgres_test_data:
 
 networks:
-  default:
+  kafka-network:
     name: kafka-network
     external: false
